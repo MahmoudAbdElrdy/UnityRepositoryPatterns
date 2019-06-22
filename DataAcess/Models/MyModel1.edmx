@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Auther">
+          <Key>
+            <PropertyRef Name="AutherID" />
+          </Key>
+          <Property Name="AutherID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AutherName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="BookID" />
+          </Key>
+          <Property Name="BookID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BookName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Descrption" Type="nvarchar(max)" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="AutherID" Type="int" />
+          <Property Name="TagID" Type="int" />
+          <Property Name="FromDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="TagID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TagName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Book_Auther">
+          <End Role="Auther" Type="Self.Auther" Multiplicity="0..1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auther">
+              <PropertyRef Name="AutherID" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="AutherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Tag">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="0..1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ProcRport1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="from" Type="datetime" Mode="In" />
+          <Parameter Name="to" Type="datetime" Mode="In" />
+        </Function>
+        <EntityContainer Name="DBModelStoreContainer">
+          <EntitySet Name="Auther" EntityType="Self.Auther" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Book" EntityType="Self.Book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Book_Auther" Association="Self.FK_Book_Auther">
+            <End Role="Auther" EntitySet="Auther" />
+            <End Role="Book" EntitySet="Book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Tag" Association="Self.FK_Book_Tag">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="Book" EntitySet="Book" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Auther">
+          <Key>
+            <PropertyRef Name="AutherID" />
+          </Key>
+          <Property Name="AutherID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AutherName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Book_Auther" FromRole="Auther" ToRole="Book" />
+        </EntityType>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="BookID" />
+          </Key>
+          <Property Name="BookID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BookName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Descrption" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="AutherID" Type="Int32" />
+          <Property Name="TagID" Type="Int32" />
+          <NavigationProperty Name="Auther" Relationship="Self.FK_Book_Auther" FromRole="Book" ToRole="Auther" />
+          <NavigationProperty Name="Tag" Relationship="Self.FK_Book_Tag" FromRole="Book" ToRole="Tag" />
+          <Property Name="FromDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="TagID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TagName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Book_Tag" FromRole="Tag" ToRole="Book" />
+        </EntityType>
+        <Association Name="FK_Book_Auther">
+          <End Role="Auther" Type="Self.Auther" Multiplicity="0..1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auther">
+              <PropertyRef Name="AutherID" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="AutherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Tag">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="0..1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Authers" EntityType="Self.Auther" />
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="Tags" EntityType="Self.Tag" />
+          <AssociationSet Name="FK_Book_Auther" Association="Self.FK_Book_Auther">
+            <End Role="Auther" EntitySet="Authers" />
+            <End Role="Book" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Tag" Association="Self.FK_Book_Tag">
+            <End Role="Tag" EntitySet="Tags" />
+            <End Role="Book" EntitySet="Books" />
+          </AssociationSet>
+          <FunctionImport Name="ProcRport1" ReturnType="Collection(DBModel.ProcRport1_Result)">
+            <Parameter Name="from" Mode="In" Type="DateTime" />
+            <Parameter Name="to" Mode="In" Type="DateTime" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="ProcRport1_Result">
+          <Property Type="Int32" Name="BookID" Nullable="false" />
+          <Property Type="String" Name="BookName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Descrption" Nullable="true" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Int32" Name="AutherID" Nullable="true" />
+          <Property Type="Int32" Name="TagID" Nullable="true" />
+          <Property Type="DateTime" Name="FromDate" Nullable="true" Precision="23" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBModelStoreContainer" CdmEntityContainer="DBEntities">
+          <EntitySetMapping Name="Authers">
+            <EntityTypeMapping TypeName="DBModel.Auther">
+              <MappingFragment StoreEntitySet="Auther">
+                <ScalarProperty Name="AutherID" ColumnName="AutherID" />
+                <ScalarProperty Name="AutherName" ColumnName="AutherName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="DBModel.Book">
+              <MappingFragment StoreEntitySet="Book">
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="BookName" ColumnName="BookName" />
+                <ScalarProperty Name="Descrption" ColumnName="Descrption" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="AutherID" ColumnName="AutherID" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tags">
+            <EntityTypeMapping TypeName="DBModel.Tag">
+              <MappingFragment StoreEntitySet="Tag">
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="TagName" ColumnName="TagName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ProcRport1" FunctionName="DBModel.Store.ProcRport1">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBModel.ProcRport1_Result">
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="BookName" ColumnName="BookName" />
+                <ScalarProperty Name="Descrption" ColumnName="Descrption" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="AutherID" ColumnName="AutherID" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
